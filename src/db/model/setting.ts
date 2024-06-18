@@ -1,17 +1,17 @@
-import * as dynamoose from 'dynamoose'
-import config from '../../config'
-import {Document} from "dynamoose/dist/Document";
+import * as dynamoose from 'dynamoose';
+import { Item } from 'dynamoose/dist/Item';
+import config from '../../config';
 
-export class SettingDocument extends Document {
-    id?: string
-    type?: string
-    symbol?: string
-    status?: string
-    data?: string
-    createdAt?: number
+export class SettingDocument extends Item {
+    id?: string;
+    type?: string;
+    symbol?: string;
+    status?: string;
+    data?: string;
+    createdAt?: Date;
 }
 
-export default dynamoose.model<SettingDocument>(config.tables.setting, {
+const SettingsSchema = new dynamoose.Schema({
     id: {
         type: String,
         hashKey: true
@@ -19,32 +19,20 @@ export default dynamoose.model<SettingDocument>(config.tables.setting, {
     type: {
         type: String,
         index: {
-            name: "type",
-            global: true
+            name: "type"
         }
     },
     symbol: {
         type: String,
         index: {
-            name: "symbol",
-            global: true
+            name: "symbol"
         }
     },
-    user: {
-        type: String,
-        index: {
-            name: "user",
-            global: true
-        }
-    },
-    data: {
-        type: String,
-    },
-    createdAt: {
-        type: Date,
-        rangeKey: true
-    },
-}, {
+    data: String,
+    createdAt: Date,
+});
+
+export default dynamoose.model<SettingDocument>(config.tables.setting, SettingsSchema, {
     // @ts-ignore-next-line
-    saveUnknown: false,
+    saveUnknown: false
 });

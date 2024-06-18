@@ -15,7 +15,7 @@ declare global {
         price?: string | number
         qty?: string | number
     }
-    type THold = {
+    type  THold = {
         id?: string
         type: string
         symbol: string
@@ -34,7 +34,7 @@ declare global {
         symbol: string
         status?: string
         user?: string
-        data: { isReuseHold: boolean, riskPercent: number, minAmountUSDT: number }
+        data: { isReuseHold: boolean, riskPercent: number, minAmountUSD: number }
         createdAt?: string | number
     }
     type TStrategy = {

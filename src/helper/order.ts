@@ -28,7 +28,7 @@ export const calculateOrderFills = (fills: TFill[] = []) => {
     let totalQty = 0
     let priceQty = 0
     let commission = 0
-    let commissionAsset = 'USDT'
+    let commissionAsset = 'USD'
     for (const f of fills) {
         commissionAsset = f.commissionAsset as string
         commission += (Number(f.commission) || 0)

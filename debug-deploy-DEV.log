@@ -1,0 +1,569 @@
+Base script filepath: D:\Github\tw-lambda-bot\package-deploy-base.bat 
+Executing Base Operation 
+Deleting existing ZIP file: lambda_function-DEV.zip 
+Compressing project files into ZIP... 
+
+7-Zip 23.01 (x64) : Copyright (c) 1999-2023 Igor Pavlov : 2023-06-20
+
+Scanning the drive:
+880 folders, 4983 files, 25031647 bytes (24 MiB)
+
+Creating archive: lambda_function-DEV.zip
+
+Add new data to archive: 880 folders, 4983 files, 25031647 bytes (24 MiB)
+
+
+Files read from disk: 4983
+Archive size: 7550478 bytes (7374 KiB)
+Everything is Ok
+Calling script to create the tables. 
+Changing directory to the script location 
+Calling .\tables\create_holds_table-dev.bat 
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "id",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "status",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "symbol",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "type",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "TV-Bot-HoldTable-DEV",
+        "KeySchema": [
+            {
+                "AttributeName": "id",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "CREATING",
+        "CreationDateTime": "2024-06-10T23:37:29.582000-04:00",
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 0,
+            "WriteCapacityUnits": 0
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-HoldTable-DEV",
+        "TableId": "aee83064-1557-40d9-bd5c-c3b96e29e823",
+        "BillingModeSummary": {
+            "BillingMode": "PAY_PER_REQUEST"
+        },
+        "GlobalSecondaryIndexes": [
+            {
+                "IndexName": "statusIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "status",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "CREATING",
+                "ProvisionedThroughput": {
+                    "NumberOfDecreasesToday": 0,
+                    "ReadCapacityUnits": 0,
+                    "WriteCapacityUnits": 0
+                },
+                "IndexSizeBytes": 0,
+                "ItemCount": 0,
+                "IndexArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-HoldTable-DEV/index/statusIndex"
+            },
+            {
+                "IndexName": "typeIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "type",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "CREATING",
+                "ProvisionedThroughput": {
+                    "NumberOfDecreasesToday": 0,
+                    "ReadCapacityUnits": 0,
+                    "WriteCapacityUnits": 0
+                },
+                "IndexSizeBytes": 0,
+                "ItemCount": 0,
+                "IndexArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-HoldTable-DEV/index/typeIndex"
+            },
+            {
+                "IndexName": "symbolIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "symbol",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "CREATING",
+                "ProvisionedThroughput": {
+                    "NumberOfDecreasesToday": 0,
+                    "ReadCapacityUnits": 0,
+                    "WriteCapacityUnits": 0
+                },
+                "IndexSizeBytes": 0,
+                "ItemCount": 0,
+                "IndexArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-HoldTable-DEV/index/symbolIndex"
+            }
+        ],
+        "DeletionProtectionEnabled": false
+    }
+}
+Calling .\tables\create_setting_table-dev.bat 
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "id",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "symbol",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "type",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "TV-Bot-SettingTable-DEV",
+        "KeySchema": [
+            {
+                "AttributeName": "id",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "CREATING",
+        "CreationDateTime": "2024-06-10T23:37:30.946000-04:00",
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 0,
+            "WriteCapacityUnits": 0
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-SettingTable-DEV",
+        "TableId": "fca85329-4074-4ffe-9231-5f2c95b2b79d",
+        "BillingModeSummary": {
+            "BillingMode": "PAY_PER_REQUEST"
+        },
+        "GlobalSecondaryIndexes": [
+            {
+                "IndexName": "type",
+                "KeySchema": [
+                    {
+                        "AttributeName": "type",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "CREATING",
+                "ProvisionedThroughput": {
+                    "NumberOfDecreasesToday": 0,
+                    "ReadCapacityUnits": 0,
+                    "WriteCapacityUnits": 0
+                },
+                "IndexSizeBytes": 0,
+                "ItemCount": 0,
+                "IndexArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-SettingTable-DEV/index/type"
+            },
+            {
+                "IndexName": "symbol",
+                "KeySchema": [
+                    {
+                        "AttributeName": "symbol",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "CREATING",
+                "ProvisionedThroughput": {
+                    "NumberOfDecreasesToday": 0,
+                    "ReadCapacityUnits": 0,
+                    "WriteCapacityUnits": 0
+                },
+                "IndexSizeBytes": 0,
+                "ItemCount": 0,
+                "IndexArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-SettingTable-DEV/index/symbol"
+            }
+        ],
+        "DeletionProtectionEnabled": false
+    }
+}
+Calling .\tables\create_strategy_table-dev.bat 
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "holdId",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "id",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "status",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "symbol",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "type",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "TV-Bot-StrategyTable-DEV",
+        "KeySchema": [
+            {
+                "AttributeName": "id",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "CREATING",
+        "CreationDateTime": "2024-06-10T23:37:32.226000-04:00",
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 0,
+            "WriteCapacityUnits": 0
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-StrategyTable-DEV",
+        "TableId": "69e1c461-815d-41c1-96c3-ba3a3ba2b044",
+        "BillingModeSummary": {
+            "BillingMode": "PAY_PER_REQUEST"
+        },
+        "GlobalSecondaryIndexes": [
+            {
+                "IndexName": "statusIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "status",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "CREATING",
+                "ProvisionedThroughput": {
+                    "NumberOfDecreasesToday": 0,
+                    "ReadCapacityUnits": 0,
+                    "WriteCapacityUnits": 0
+                },
+                "IndexSizeBytes": 0,
+                "ItemCount": 0,
+                "IndexArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-StrategyTable-DEV/index/statusIndex"
+            },
+            {
+                "IndexName": "holdIdIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "holdId",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "CREATING",
+                "ProvisionedThroughput": {
+                    "NumberOfDecreasesToday": 0,
+                    "ReadCapacityUnits": 0,
+                    "WriteCapacityUnits": 0
+                },
+                "IndexSizeBytes": 0,
+                "ItemCount": 0,
+                "IndexArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-StrategyTable-DEV/index/holdIdIndex"
+            },
+            {
+                "IndexName": "typeIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "type",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "CREATING",
+                "ProvisionedThroughput": {
+                    "NumberOfDecreasesToday": 0,
+                    "ReadCapacityUnits": 0,
+                    "WriteCapacityUnits": 0
+                },
+                "IndexSizeBytes": 0,
+                "ItemCount": 0,
+                "IndexArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-StrategyTable-DEV/index/typeIndex"
+            },
+            {
+                "IndexName": "symbolIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "symbol",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL"
+                },
+                "IndexStatus": "CREATING",
+                "ProvisionedThroughput": {
+                    "NumberOfDecreasesToday": 0,
+                    "ReadCapacityUnits": 0,
+                    "WriteCapacityUnits": 0
+                },
+                "IndexSizeBytes": 0,
+                "ItemCount": 0,
+                "IndexArn": "arn:aws:dynamodb:us-east-1:697426589657:table/TV-Bot-StrategyTable-DEV/index/symbolIndex"
+            }
+        ],
+        "DeletionProtectionEnabled": false
+    }
+}
+Script execution completed. 
+Changing back to the original directory 
+Role creation and policy assignment script execution completed.  
+Calling script to create roles and assign policies. 
+Changing directory to the script location 
+Already in the script location 
+Base script filepath: D:\Github\tw-lambda-bot\aws-setup-scripts\create-role-base.bat 
+Executing Base Operation 
+ Creating Role... 
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "TV-Lambda-BotLambdaExecutionRole-DEV",
+        "RoleId": "AROA2EYO5G7MVTKD6A2NR",
+        "Arn": "arn:aws:iam::697426589657:role/TV-Lambda-BotLambdaExecutionRole-DEV",
+        "CreateDate": "2024-06-11T03:37:33+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "lambda.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        }
+    }
+}
+Already in the script location 
+ Creating Policies... 
+Creating policy TV-Bot-HoldTable-DEV-allaccess 
+{
+    "Policy": {
+        "PolicyName": "TV-Bot-HoldTable-DEV-allaccess",
+        "PolicyId": "ANPA2EYO5G7MVBZQVH6NP",
+        "Arn": "arn:aws:iam::697426589657:policy/TV-Bot-HoldTable-DEV-allaccess",
+        "Path": "/",
+        "DefaultVersionId": "v1",
+        "AttachmentCount": 0,
+        "PermissionsBoundaryUsageCount": 0,
+        "IsAttachable": true,
+        "CreateDate": "2024-06-11T03:37:35+00:00",
+        "UpdateDate": "2024-06-11T03:37:35+00:00"
+    }
+}
+Create success: TV-Bot-HoldTable-DEV-allaccess 
+Creating policy TV-Bot-SettingTable-DEV-allaccess 
+{
+    "Policy": {
+        "PolicyName": "TV-Bot-SettingTable-DEV-allaccess",
+        "PolicyId": "ANPA2EYO5G7M4ED37BSBG",
+        "Arn": "arn:aws:iam::697426589657:policy/TV-Bot-SettingTable-DEV-allaccess",
+        "Path": "/",
+        "DefaultVersionId": "v1",
+        "AttachmentCount": 0,
+        "PermissionsBoundaryUsageCount": 0,
+        "IsAttachable": true,
+        "CreateDate": "2024-06-11T03:37:36+00:00",
+        "UpdateDate": "2024-06-11T03:37:36+00:00"
+    }
+}
+Create success: TV-Bot-SettingTable-DEV-allaccess 
+Creating policy TV-Bot-StrategyTable-DEV-allaccess 
+{
+    "Policy": {
+        "PolicyName": "TV-Bot-StrategyTable-DEV-allaccess",
+        "PolicyId": "ANPA2EYO5G7MZS2MB2J4T",
+        "Arn": "arn:aws:iam::697426589657:policy/TV-Bot-StrategyTable-DEV-allaccess",
+        "Path": "/",
+        "DefaultVersionId": "v1",
+        "AttachmentCount": 0,
+        "PermissionsBoundaryUsageCount": 0,
+        "IsAttachable": true,
+        "CreateDate": "2024-06-11T03:37:37+00:00",
+        "UpdateDate": "2024-06-11T03:37:37+00:00"
+    }
+}
+Create success: TV-Bot-StrategyTable-DEV-allaccess 
+ Policies Created. 
+Script execution completed. 
+Already in the script location 
+ Attaching Policies... 
+Attaching policy TV-Bot-HoldTable-DEV-allaccess to role TV-Lambda-BotLambdaExecutionRole-DEV 
+Attachment success: TV-Bot-HoldTable-DEV-allaccess 
+Attaching policy TV-Bot-SettingTable-DEV-allaccess to role TV-Lambda-BotLambdaExecutionRole-DEV 
+Attachment success: TV-Bot-SettingTable-DEV-allaccess 
+Attaching policy TV-Bot-StrategyTable-DEV-allaccess to role TV-Lambda-BotLambdaExecutionRole-DEV 
+Attachment success: TV-Bot-StrategyTable-DEV-allaccess 
+ Execution Role and Policies Created and assigned. 
+Script execution completed. 
+ Execution Role and Policies Created and assigned. 
+Script execution completed. 
+Changing back to the original directory 
+Role creation and policy assignment script execution completed.  
+Deploying Lambda function with AWS CLI... 
+{
+    "FunctionName": "TV-Lambda-Bot-DEV",
+    "FunctionArn": "arn:aws:lambda:us-east-1:697426589657:function:TV-Lambda-Bot-DEV",
+    "Runtime": "nodejs20.x",
+    "Role": "arn:aws:iam::697426589657:role/TV-Lambda-BotLambdaExecutionRole-DEV",
+    "Handler": "index.handler",
+    "CodeSize": 7550478,
+    "Description": "",
+    "Timeout": 3,
+    "MemorySize": 128,
+    "LastModified": "2024-06-11T03:37:56.637+0000",
+    "CodeSha256": "jPprzWJfhq+guN8G0bM3D/8l5axaoXhrs4R+X82qzGE=",
+    "Version": "$LATEST",
+    "TracingConfig": {
+        "Mode": "PassThrough"
+    },
+    "RevisionId": "31f5fe62-e1eb-46b8-947a-dbaab710951f",
+    "State": "Pending",
+    "StateReason": "The function is being created.",
+    "StateReasonCode": "Creating",
+    "PackageType": "Zip",
+    "Architectures": [
+        "x86_64"
+    ],
+    "EphemeralStorage": {
+        "Size": 512
+    },
+    "SnapStart": {
+        "ApplyOn": "None",
+        "OptimizationStatus": "Off"
+    },
+    "RuntimeVersionConfig": {
+        "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:92c5bcb1529200756eb64a0d90d4ab606fdaf21421321da6c202187b88833f52"
+    }
+}
+Lambda function deployment completed. 
+{
+    "AliasArn": "arn:aws:lambda:us-east-1:697426589657:function:TV-Lambda-Bot-DEV:DEV",
+    "Name": "DEV",
+    "FunctionVersion": "1",
+    "Description": "",
+    "RevisionId": "5baa50e7-c02e-4ae4-85dd-dbed8791d4a9"
+}
+Creating log group for the Lambda function... 
+Log group creation completed. 
+Updating environment configuration with provided script... 
+Changing directory to the script location 
+{
+    "FunctionName": "TV-Lambda-Bot-DEV",
+    "FunctionArn": "arn:aws:lambda:us-east-1:697426589657:function:TV-Lambda-Bot-DEV",
+    "Runtime": "nodejs20.x",
+    "Role": "arn:aws:iam::697426589657:role/TV-Lambda-BotLambdaExecutionRole-DEV",
+    "Handler": "index.handler",
+    "CodeSize": 7550478,
+    "Description": "",
+    "Timeout": 10,
+    "MemorySize": 128,
+    "LastModified": "2024-06-11T03:38:01.000+0000",
+    "CodeSha256": "jPprzWJfhq+guN8G0bM3D/8l5axaoXhrs4R+X82qzGE=",
+    "Version": "$LATEST",
+    "TracingConfig": {
+        "Mode": "PassThrough"
+    },
+    "RevisionId": "bf00f76a-14bb-4798-9371-d2f1a0e20c9e",
+    "State": "Active",
+    "LastUpdateStatus": "InProgress",
+    "LastUpdateStatusReason": "The function is being created.",
+    "LastUpdateStatusReasonCode": "Creating",
+    "PackageType": "Zip",
+    "Architectures": [
+        "x86_64"
+    ],
+    "EphemeralStorage": {
+        "Size": 512
+    },
+    "SnapStart": {
+        "ApplyOn": "None",
+        "OptimizationStatus": "Off"
+    },
+    "RuntimeVersionConfig": {
+        "RuntimeVersionArn": "arn:aws:lambda:us-east-1::runtime:92c5bcb1529200756eb64a0d90d4ab606fdaf21421321da6c202187b88833f52"
+    }
+}
+
+An error occurred (InvalidParameterValueException) when calling the UpdateFunctionConfiguration operation: Lambda was unable to configure your environment variables because the environment variables you have provided contains reserved keys that are currently not supported for modification. Reserved keys used in this request: AWS_REGION
+Lambda Config Environment Updated. 
+Changing back to the original directory 
+Environment configuration update script execution completed. 
+Retrieving ARN of the newly created Lambda function... 
+ARN retrieved: arn:aws:lambda:us-east-1:697426589657:function:TV-Lambda-Bot-DEV 
+Updating API. 
+Changing directory to the script location 
+Base script filepath: D:\Github\tw-lambda-bot\aws-setup-scripts\update-api-base.bat 
+Executing Base Operation 
+Updating API Gateway Integration... 
+{
+    "type": "AWS_PROXY",
+    "httpMethod": "POST",
+    "uri": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:697426589657:function:TV-Lambda-Bot-DEV/invocations",
+    "passthroughBehavior": "WHEN_NO_MATCH",
+    "timeoutInMillis": 29000,
+    "cacheNamespace": "e0yyuo",
+    "cacheKeyParameters": []
+}
+API Gateway Integration update completed. 
+Deploying API to the dev stage... 
+{
+    "id": "z8bgqq",
+    "createdDate": "2024-06-10T23:38:09-04:00"
+}
+API deployment to dev stage completed. 
+Lambda function and API Gateway setup completed. 
+Setting Lambda Function Trigger 
+Adding permission to Lambda function... 
+{
+    "Statement": "{\"Sid\":\"apigateway-invocation\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:697426589657:function:TV-Lambda-Bot-DEV\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:execute-api:us-east-1:697426589657:xy52jc9g9b/dev/POST/webhook\"}}}"
+}
+Permission added to Lambda function. 
+Lambda Config Environment Updated. 
+Changing back to the original directory 
+Base Package Deploy Script execution completed. 
+Script execution completed. 

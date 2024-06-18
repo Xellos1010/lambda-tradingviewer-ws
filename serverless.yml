@@ -1,0 +1,21 @@
+service: tw-lambda-bot
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+
+functions:
+  signalProcessor:
+    handler: dist/index.js
+    events:
+      - http:
+          path: process-signal
+          method: post
+
+plugins:
+  - serverless-offline
+
+package:
+  exclude:
+    - node_modules/**
+    - '!node_modules/aws-sdk/**'

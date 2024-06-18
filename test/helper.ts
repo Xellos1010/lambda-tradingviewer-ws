@@ -4,7 +4,7 @@ import strategyProvider from "../src/db/provider/strategy";
 
 export const clearDB = async (type: string, symbol: string) => {
     const setting = await settingProvider.getList({type, symbol})
-    const prs = []
+    const prs : Promise<void>[] = []
     for (const s of setting) {
         prs.push(settingProvider.deleteById(s.id))
     }

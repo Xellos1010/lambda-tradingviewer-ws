@@ -1,0 +1,81 @@
+Windows Commands
+
+Prerequisites: 
+Install nodejs Latest
+Install Typescript Global
+Install Yarn
+Install AWS SDK
+Create an AWS IAM User that allows you to create the resources required for running the application
+Configure AWS SDK with IAM User
+I use Visual Studio Code and I open the main project in Visual Studio code
+
+How to Configure the project
+
+Copy the .env file and add the following settings
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=us-east-1
+DYNAMODB_HOLD_TABLE=TV-Bot-HoldTable
+DYNAMODB_SETTING_TABLE=TV-Bot-SettingTable
+DYNAMODB_STRATEGY_TABLE=TV-Bot-StrategyTable
+COINBASE_API_PASSPHRASE=
+COINBASE_API_KEY=
+COINBASE_API_SECRET=
+
+Create the DynamoDB Tables
+DYNAMODB_HOLD_TABLE=TV-Bot-HoldTable
+DYNAMODB_SETTING_TABLE=TV-Bot-SettingTable
+DYNAMODB_STRATEGY_TABLE=TV-Bot-StrategyTable
+
+How to run the tests the Tests.
+run command yarn test
+
+how to build dist folder
+run command yarn build
+
+How to Deploy to Lambda
+Change directory to dist folder
+Zip the File
+7z a -r lambda_function.zip *
+
+Create the Lambda Function
+aws lambda create-function --function-name tradingview-webhook --runtime nodejs18.x --role arn:aws:iam::"AccountNumber":role/LambdaExecutionRole --handler index.handler --zip-file fileb://lambda_function.zip --profile SystemDeveloper
+
+Create the Log Group for the Lambda Function
+aws logs create-log-group --log-group-name /aws/lambda/tradingview-webhook --profile SystemDeveloper
+
+To Update the lambda function in the future
+aws lambda update-function-code --function-name tradingview-webhook --zip-file fileb://lambda_function.zip --profile SystemDeveloper
+
+To Setup Environment Variables
+aws lambda update-function-configuration --function-name tradingview-webhook --environment file://env.json --profile SystemDeveloper
+
+# Create a REST API
+aws apigateway create-rest-api --name tradingview-webhook-api --profile SystemDeveloper
+
+# Store the API ID and Root Resource ID
+for /f "tokens=*" %i in ('aws apigateway get-rest-apis --query "items[?name=='tradingview-webhook-api'].id" --output text --profile SystemDeveloper') do set API_ID=%i
+for /f "tokens=*" %i in ('aws apigateway get-resources --rest-api-id %API_ID% --query "items[?path=='/'].id" --output text --profile SystemDeveloper') do set ROOT_RESOURCE_ID=%i
+
+# Create a /webhook resource
+for /f "tokens=*" %i in ('aws apigateway create-resource --rest-api-id %API_ID% --parent-id %ROOT_RESOURCE_ID% --path-part webhook --query "id" --output text --profile SystemDeveloper') do set RESOURCE_ID=%i
+
+# Create a POST method
+aws apigateway put-method --rest-api-id "RestAPIID" --resource-id "ResourceID" --http-method POST --authorization-type NONE --profile SystemDeveloper
+
+# Create a Lambda integration
+aws apigateway put-integration --rest-api-id "RestAPIID" --resource-id "ResourceID" --http-method POST --type AWS_PROXY --integration-http-method POST --uri arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:"AccountNumber":function:tradingview-webhook/invocations --profile SystemDeveloper
+
+# Add the permission to lambda to be invoked
+aws lambda add-permission --function-name tradingview-webhook --statement-id apigateway-access --action lambda:InvokeFunction --principal apigateway.amazonaws.com --source-arn "arn:aws:execute-api:us-east-1:"AccountNumber":"RestAPIID"/*/POST/webhook" --profile SystemDeveloper
+
+
+# Deploy the API
+aws apigateway create-deployment --rest-api-id "RestAPIID" --stage-name prod --profile SystemDeveloper
+
+https://"RestAPIID".execute-api.us-east-1.amazonaws.com/prod
+
+curl -H "Content-Type: application/json; charset=utf-8" -d "strategy_name:V2-RSI-BB-Pyramid-v5,strategy_params:(84, 12, close, 12, 200, hlc3, 3, 2, 3, 1, 8, 2023, 6, 9, 2023),order_action:buy,order_contracts:100,ticker:ticker,position_size:80" -X POST https://"RestAPIID".execute-api.us-east-1.amazonaws.com/prod/webhook
+
+Testing ts-node script
+npx ts-node main.ts

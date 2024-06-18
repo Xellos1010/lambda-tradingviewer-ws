@@ -1,67 +1,55 @@
-import * as dynamoose from 'dynamoose'
-import config from '../../config'
-import {Document} from "dynamoose/dist/Document";
+import * as dynamoose from 'dynamoose';
+import { Item } from "dynamoose/dist/Item";
+import config from '../../config';
 
-export class StrategyDocument extends Document {
-    id?: string
-    type?: string
-    symbol?: string
-    status?: string
-    profit?: number
-    data?: string
-    createdAt?: number
-    holdId?: string
-    unHoldPrice?: number
+export class StrategyDocument extends Item {
+    id?: string;
+    type?: string;
+    symbol?: string;
+    status?: string;
+    profit?: number;
+    data?: string;
+    createdAt?: Date;
+    holdId?: string;
+    unHoldPrice?: number;
 }
 
-export default dynamoose.model<StrategyDocument>(config.tables.strategy, {
+const StrategySchema = new dynamoose.Schema({
     id: {
         type: String,
-        hashKey: true
+        hashKey: true,
     },
     type: {
         type: String,
         index: {
-            name: "type",
-            global: true
-        }
-    },
-    user: {
-        type: String,
-        index: {
-            name: "user",
-            global: true
-        }
+            name: 'typeIndex',
+        },
     },
     symbol: {
         type: String,
         index: {
-            name: "symbol",
-            global: true
-        }
+            name: 'symbolIndex',
+        },
     },
     status: {
         type: String,
         index: {
-            name: "status",
-            global: true
-        }
+            name: 'statusIndex',
+        },
     },
     profit: Number,
     data: String,
-    createdAt: {
-        type: Number,
-        rangeKey: true
-    },
+    createdAt: Date,
     holdId: {
         type: String,
         index: {
-            name: "holdId",
-            global: true
-        }
+            name: 'holdIdIndex',
+        },
     },
     unHoldPrice: Number,
-}, {
+});
+
+export default dynamoose.model<StrategyDocument>(config.tables.strategy, StrategySchema, {
     // @ts-ignore-next-line
-    saveUnknown: false,
+    saveUnknown: false
 });

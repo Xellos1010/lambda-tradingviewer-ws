@@ -1,21 +1,22 @@
-import * as dynamoose from 'dynamoose'
-import {Document} from "dynamoose/dist/Document";
-import config from '../../config'
-
-export class HoldDocument extends Document {
-    id?: string
-    type?: string
-    symbol?: string
-    status?: string
-    data?: string
-    avgPrice?: number
-    avgPriceProfit?: number
-    orderId?: string
-    qty?: number
-    createdAt?: number
+import * as dynamoose from 'dynamoose';
+import { Item } from "dynamoose/dist/Item";
+import config from '../../config';
+const tableName = config.tables.hold
+// console.log(tableName)
+export class HoldDocument extends Item {
+    id?: string;
+    type?: string;
+    symbol?: string;
+    status?: string;
+    data?: string;
+    avgPrice?: number;
+    avgPriceProfit?: number;
+    orderId?: string;
+    qty?: number;
+    createdAt?: Date;
 }
 
-export default dynamoose.model<HoldDocument>(config.tables.hold, {
+const HoldSchema = new dynamoose.Schema({
     id: {
         type: String,
         hashKey: true
@@ -23,29 +24,19 @@ export default dynamoose.model<HoldDocument>(config.tables.hold, {
     type: {
         type: String,
         index: {
-            name: "type",
-            global: true
+            name: "typeIndex",
         }
     },
     symbol: {
         type: String,
         index: {
-            name: "symbol",
-            global: true
+            name: "symbolIndex",
         }
     },
     status: {
         type: String,
         index: {
-            name: "status",
-            global: true
-        }
-    },
-    user: {
-        type: String,
-        index: {
-            name: "user",
-            global: true
+            name: "statusIndex",
         }
     },
     data: String,
@@ -53,12 +44,10 @@ export default dynamoose.model<HoldDocument>(config.tables.hold, {
     avgPriceProfit: Number,
     orderId: String,
     qty: Number,
-    createdAt: {
-        type: Number,
-        rangeKey: true
-    },
+    createdAt: Date,
+});
 
-}, {
+export default dynamoose.model<HoldDocument>(tableName, HoldSchema, {
     // @ts-ignore-next-line
     saveUnknown: false
 });

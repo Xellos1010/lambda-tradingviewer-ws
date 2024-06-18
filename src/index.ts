@@ -1,30 +1,36 @@
-import {STRATEGY_ACTION_SELL, STRATEGY_ACTION_BUY, STRATEGY_STATUS, BOT_STAT} from './constants'
+// src\index.ts
+import {
+  APIGatewayProxyHandler,
+  APIGatewayProxyEvent
+} from "aws-lambda";
+// import {STRATEGY_ACTION_SELL, STRATEGY_ACTION_BUY, STRATEGY_STATUS, BOT_STAT} from './constants'
+import {STRATEGY_ACTION_SELL, STRATEGY_ACTION_BUY, BOT_STAT} from './constants'
 import config from './config'
-import strategyProvider from './db/provider/strategy'
+// import strategyProvider from './db/provider/strategy'
 import SpotStrategy from './strategy/SpotStrategy'
 import cognito from "./helper/cognito";
 
 type TAction = typeof STRATEGY_ACTION_SELL | typeof STRATEGY_ACTION_BUY
 
-const getAction = (req: any): TAction => {
-    let data = req.body
-    try {
-        data = JSON.parse(data)
-    } catch (e) {
-    }
-    let action = ''
+const getAction = (action: any): TAction => {
+    // let data = req.body
+    // try {
+    //     data = JSON.parse(data)
+    // } catch (e) {
+    // }
+    // let action = ''
 
-    if (data) {
-        if (typeof data === 'string') {
-            action = data
-        } else if (data && data.message) {
-            action = data.message
-        } else if (data && data.action) {
-            action = data.action
-        } else {
-            action = data.order && data.order.action
-        }
-    }
+    // if (data) {
+    //     if (typeof data === 'string') {
+    //         action = data
+    //     } else if (data && data.message) {
+    //         action = data.message
+    //     } else if (data && data.action) {
+    //         action = data.action
+    //     } else {
+    //         action = data.order && data.order.action
+    //     }
+    // }
 
     return action as TAction
 }
@@ -35,22 +41,22 @@ const signalSpotProcessing = async (action: string, symbol: string, currency: st
         await strategy.init()
 
         if (action === STRATEGY_ACTION_SELL) {
-            const lastStrategy: TStrategy | undefined = await strategyProvider.getCurrentStrategy(type, symbol)
-            if (lastStrategy) {
-                strategy.setStrategy(lastStrategy)
-            }
-            if (strategy.strategy.status !== STRATEGY_STATUS.STARTED) {
-                return
-            }
+            // const lastStrategy: TStrategy | undefined = await strategyProvider.getCurrentStrategy(type, symbol)
+            // if (lastStrategy) {
+            //     strategy.setStrategy(lastStrategy)
+            // }
+            // if (strategy.strategy.status !== STRATEGY_STATUS.STARTED) {
+            //     return
+            // }
             await strategy.sell()
 
         } else if (action === STRATEGY_ACTION_BUY) {
             try {
-                const lastStrategy: TStrategy | undefined = await strategyProvider.getCurrentStrategy(type, symbol)
-                if (lastStrategy?.id) {
-                    console.log('strategy in progress. do nothing')
-                    return
-                }
+                // const lastStrategy: TStrategy | undefined = await strategyProvider.getCurrentStrategy(type, symbol)
+                // if (lastStrategy?.id) {
+                //     console.log('strategy in progress. do nothing')
+                //     return
+                // }
                 await strategy.buy(currency)
             } catch (e) {
                 console.log('error buy', e)
@@ -65,7 +71,7 @@ const signalSpotProcessing = async (action: string, symbol: string, currency: st
 }
 
 const getAccessToken = (req: any): string => {
-    return req.headers.authorization
+    return req.headers?.authorization || "";
 }
 
 const getCognitoUser = async (accessToken: string) => {
@@ -79,29 +85,130 @@ const getCognitoUser = async (accessToken: string) => {
     throw new Error('Unauthorized')
 }
 
-export const handler = async (req: any) => {
-    const action = getAction(req)
-    const accessToken = getAccessToken(req)
-    const asset = config.strategy.asset
-    const currency = config.strategy.currency
-    const symbol = `${asset}${currency}`
-    const type = config.strategy.type
-    let body
-    try {
-        body = await signalSpotProcessing(action, symbol, currency, type, accessToken)
-    } catch (e) {
-        console.log('error', e)
-    }
+export const errorResponse = (statusCode: number, message: string) => {
+  return {
+    statusCode,
+    body: JSON.stringify({
+      status: "error",
+      message,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  };
+};
 
+export const successResponse = () => {
     return {
-        success: true,
-        statusCode: 200,
-        body,
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*',
-            'Access-Control-Allow-Headers': '*',
-        }
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "success",
+        message: "Signal Processed",
+      }),
+      headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+    };
+  };
+
+  interface Body {
+    strategy_name: string;
+    strategy_params: string;
+    order_action: string;
+    contracts: string;
+    ticker: string;
+    position_size: string;
+  }
+  
+  const parseBody = (str: string): Body => {
+    const result: any = {};
+    let key = '';
+    let value = '';
+    let insideParentheses = false;
+  
+    for (let i = 0; i < str.length; i++) {
+      const char = str[i];
+      if (char === '(') insideParentheses = true;
+      if (char === ')') insideParentheses = false;
+  
+      if (char === ',' && !insideParentheses) {
+        result[key.trim()] = value.trim();
+        key = '';
+        value = '';
+      } else if (char === ':' && key === '') {
+        key = value;
+        value = '';
+      } else {
+        value += char;
+      }
     }
-}
+  
+    if (key !== '') {
+      result[key.trim()] = value.trim();
+    }
+  
+    return {
+      strategy_name: result.strategy_name,
+      strategy_params: result.strategy_params,
+      order_action: result.order_action,
+      contracts: result.contracts,
+      ticker: result.ticker,
+      position_size: result.position_size,
+      // Add other expected properties here
+    };
+  };
+  
+
+export const handler: APIGatewayProxyHandler = async (
+  event: APIGatewayProxyEvent,
+  _: any
+) => {
+  console.log("Received event:", JSON.stringify(event, null, 2));
+
+  if (event.body === null) {
+    console.log("Body is null");
+    return errorResponse(400, "Missing body");
+  }
+
+  const bodyStr = event.body;
+  let body = parseBody(bodyStr);
+
+  console.log("Parsed body:", body);
+
+  // Accessing and printing properties from the parsed body
+  const strategyName = body.strategy_name;
+  console.log("Strategy Name:", strategyName);
+
+  const strategyParams = body.strategy_params; // This should be an array
+  console.log("Strategy Params:", strategyParams);
+
+  const orderAction = body.order_action;
+  console.log("Order Action:", orderAction);
+
+  const contracts = body.contracts;
+  console.log("Contracts:", contracts);
+
+  const ticker = body.ticker;
+  console.log("Ticker:", ticker);
+
+  const positionSize = body.position_size;
+  console.log("Position Size:", positionSize);
+
+  const action = getAction(orderAction)
+  const accessToken = getAccessToken(event)
+  const asset = config.strategy.asset
+  const currency = config.strategy.currency
+  const symbol = `${asset}-${currency}`
+  const type = config.strategy.type
+  try {
+      body = await signalSpotProcessing(action, symbol, currency, type, accessToken)
+  } catch (e) {
+      console.log('error', e)
+  }
+
+  return successResponse();
+};

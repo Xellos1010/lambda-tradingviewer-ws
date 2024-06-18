@@ -1,0 +1,13 @@
+{
+  "Variables": {
+    "AWS_REGION":"us-east-1",
+    "DYNAMODB_HOLD_TABLE":"TV-Bot-HoldTable",
+    "DYNAMODB_SETTING_TABLE":"TV-Bot-SettingTable",
+    "DYNAMODB_STRATEGY_TABLE":"TV-Bot-StrategyTable",
+    "DYNAMODB_ORDERS_TABLE":"TV-Bot-OrdersTable",
+    "COINBASE_API_PASSPHRASE":"qikexr816m",
+    "COINBASE_API_KEY":"997cec1bd578048996b64854af3838bf",
+    "COINBASE_API_SECRET":"1SUYXbYh+2gE0KMH7CK3H4SF64ifkZCqNmuC955RVXV+eSG6T8ZlKCmZqtt51SovzPelPYi8KoIumhsmM7AGDQ==",
+    "ENV":"DEV"
+  }
+}

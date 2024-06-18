@@ -23,11 +23,11 @@ describe('main', () => {
     let apiMethods: any = {}
     beforeAll(async () => {
         type = 'myStrategyTestMain'
-        symbol = 'ETHUSDT'
-        currency = 'USDT'
+        symbol = 'BTCUSD'
+        currency = 'USD'
         orderId = 'someOrderId'
         config.strategy.type = type
-        config.strategy.defaultSetting.minAmountUSDT = 200
+        config.strategy.defaultSetting.minAmountUSD = 200
         await clearDB(type, symbol)
         api = new BaseApiSpotService(symbol)
     })
@@ -80,7 +80,7 @@ describe('main', () => {
     afterAll(async () => {
         await clearDB(type, symbol)
     })
-    describe('binance', () => {
+    describe('coinbase', () => {
         it('balance', async () => {
             const {available} = await api.getBalance(currency)
             expect(available).toBe(balance)
@@ -114,8 +114,8 @@ describe('main', () => {
     describe('signal', () => {
         it('buy - sell - profit', async () => {
             // buy
-            await handler({body: {message: 'buy'}})
-            const shouldBeQty = config.strategy.defaultSetting.minAmountUSDT / currentPrice
+            await handler({headers:{authorization:"test"},body: {message: 'buy'}})
+            const shouldBeQty = config.strategy.defaultSetting.minAmountUSD / currentPrice
             expect(apiMethods.getPrice).toHaveBeenCalled();
             expect(apiMethods.getBalance).toHaveBeenCalledWith(currency);
             expect(apiMethods.marketBuy).toHaveBeenCalledWith(shouldBeQty);
@@ -147,7 +147,7 @@ describe('main', () => {
         it('buy - hold', async () => {
             // buy
             await handler({body: {message: 'buy'}})
-            const shouldBeQty = config.strategy.defaultSetting.minAmountUSDT / currentPrice
+            const shouldBeQty = config.strategy.defaultSetting.minAmountUSD / currentPrice
             const s = (await strategyProvider.getCurrentStrategy(type, symbol))!
             expect(apiMethods.getPrice).toHaveBeenCalled();
             expect(apiMethods.getBalance).toHaveBeenCalledWith(currency);

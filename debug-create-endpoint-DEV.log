@@ -1,0 +1,64 @@
+Changing directory to the script location 
+Calling create-endpoint-base.bat 
+Setting up initial variables... 
+Checking and changing the directory to the script location... 
+Changing directory to the script location 
+Defining variables for API Gateway... 
+Checking if the resource already exists... 
+{
+    "items": [
+        {
+            "id": "a4lgqcmsm4",
+            "path": "/"
+        }
+    ]
+}
+Checking the output of the get-resource call 
+checking line { 
+checking key  
+checking value  
+checking line "items": [ 
+checking key items 
+checking value  
+checking line { 
+checking key  
+checking value  
+checking line "id": "a4lgqcmsm4", 
+checking key id 
+checking value a4lgqcmsm4 
+set LAST_ID: a4lgqcmsm4 
+checking line "path": "/" 
+checking key path 
+checking value / 
+checking line } 
+checking key  
+checking value  
+checking line ] 
+checking key  
+checking value  
+checking line } 
+checking key  
+checking value  
+Creating the API Gateway resource... 
+{
+    "id": "e0yyuo",
+    "parentId": "a4lgqcmsm4",
+    "pathPart": "webhook",
+    "path": "/webhook"
+}
+checking line "id": "e0yyuo", 
+checking key:id: 
+checking value:e0yyuo:
+set RESOURCE_ID: e0yyuo 
+Checking if the POST method exists for the resource... 
+{
+    "httpMethod": "POST",
+    "authorizationType": "NONE",
+    "apiKeyRequired": false
+}
+POST method created. 
+Script execution completed. 
+Changing back to the original directory 
+Cleaning up temporary files... 
+Script execution completed. 
+Changing back to the original directory 
