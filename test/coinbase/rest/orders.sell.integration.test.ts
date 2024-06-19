@@ -1,5 +1,5 @@
 import {
-  createBuyOrder,
+  createSellOrder,
   generateClientOrderID,
   cancelOrders,
 } from "../../../src/coinbase/rest/orders";
@@ -13,11 +13,11 @@ describe("Coinbase API Integration Test - Orders", () => {
       const endTime = new Date(Date.now() + 1 * 60 * 1000).toISOString();
       // Create a buy order
       const buyOrderConfig = {
-        limit_price: "20000.00",
+        limit_price: "70000.00",
         end_time: endTime,
       };
 
-      const createOrderResponse = await createBuyOrder(
+      const createOrderResponse = await createSellOrder(
         "BTC-USD",
         "0.00001", // The amount of BTC you want to purchase
         uniqueOrderId,
@@ -27,7 +27,7 @@ describe("Coinbase API Integration Test - Orders", () => {
 
       // Edit the order
       const orderID = createOrderResponse.order_id;
-      
+
       // Cancel the order
       const cancelOrderResponse = await cancelOrders([orderID]);
       console.log("Cancelled order response:", cancelOrderResponse);
