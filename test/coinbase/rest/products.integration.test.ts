@@ -1,5 +1,5 @@
-import { listProducts, getProduct } from "../src/coinbase/rest/products";
-import { getBestBidAsk } from "../src/coinbase/rest/products";
+import { listProducts, getProduct } from "../../../src/coinbase/rest/products";
+import { getBestBidAsk } from "../../../src/coinbase/rest/products";
 // import { listProducts, getProduct, getBestBidAsk, getProductBook, getProductCandles, getMarketTrades } from '../src/coinbase/utils/apiUtils';
 
 describe("Coinbase API Integration Test - Products", () => {

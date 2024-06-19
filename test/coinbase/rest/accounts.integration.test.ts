@@ -1,11 +1,11 @@
-import { listAccounts, getAccount } from '../src/coinbase/rest/accounts';
+import { listAccounts, getAccount } from '../../../src/coinbase/rest/accounts';
 
 describe('Coinbase API Integration Test - Accounts', () => {
   it('should fetch accounts and then fetch an account by UUID', async () => {
     try {
       // Fetch accounts
       const accountsData = await listAccounts();
-      console.log('Fetched accounts data:', accountsData);
+      console.log('Fetched accounts data:', JSON.stringify(accountsData, null, 2));
 
       // Get the UUID of the first account
       const accountUUID = accountsData.accounts[0].uuid;
