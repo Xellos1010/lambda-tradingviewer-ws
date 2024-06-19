@@ -1,10 +1,10 @@
 // test/apiUtils.integration.test.ts
-import { getAccounts } from '../src/coinbase/utils/apiUtils';
+import { listAccounts } from '../src/coinbase/rest/accounts';
 
 describe('Coinbase API Integration Test', () => {
   it('should fetch accounts', async () => {
     try {
-      const data = await getAccounts();
+      const data = await listAccounts();
       console.log('Fetched accounts data:', data);
     } catch (error) {
       if (error instanceof Error) {

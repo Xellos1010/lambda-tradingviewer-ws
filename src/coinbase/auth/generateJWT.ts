@@ -6,7 +6,7 @@ const { keyName, keySecret, baseUrl} = config;
 
 const generateJWT = (requestMethod : string, requestPath : string): string => {
   const algorithm = "ES256";
-  const uri = `${requestMethod} ${baseUrl}${requestPath}`;
+  const uri = formatJWTUri(requestMethod, requestPath);//`${requestMethod} ${baseUrl}${requestPath}`;
   console.log("uri: " + uri);
   const payload = {
     iss: "cdp",
@@ -23,6 +23,10 @@ const generateJWT = (requestMethod : string, requestPath : string): string => {
   };
 
   return sign(payload, keySecret, { algorithm, header });;
+};
+
+export const formatJWTUri = (method: string, path: string): string => {
+  return `${method} ${baseUrl}${path}`;
 };
 
 export { generateJWT };
