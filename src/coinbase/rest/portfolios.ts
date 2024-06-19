@@ -1,67 +1,56 @@
-import { getRequest } from "./utils/apiUtils";
+// src/coinbase/rest/portfolios.ts
+import BaseClient from "../BaseClient";
 
-const listPortfolios = async (queryParams: object = {}) => {
+class PortfolioClient extends BaseClient {
+  async listPortfolios(queryParams: object = {}): Promise<any> {
     const queryString = new URLSearchParams(queryParams as any).toString();
-    return await getRequest(`/portfolios?${queryString}`);
-  };
-  
-  const getPortfolioBreakdown = async (portfolioUUID: string, queryParams: object = {}) => {
-    const queryString = new URLSearchParams(queryParams as any).toString();
-    return await getRequest(`/portfolios/${portfolioUUID}?${queryString}`);
-  };
-  
-  const getFuturesBalanceSummary = async () => {
-    return await getRequest(`/cfm/balance_summary`);
-  };
-  
-  const listFuturesPositions = async () => {
-    return await getRequest(`/cfm/positions`);
-  };
-  
-  const getFuturesPosition = async (productID: string) => {
-    return await getRequest(`/cfm/positions/${productID}`);
-  };
-  
-  const listFuturesSweeps = async () => {
-    return await getRequest(`/cfm/sweeps`);
-  };
-  
-  const getIntradayMarginSetting = async () => {
-    return await getRequest(`/cfm/intraday/margin_setting`);
-  };
-  
-  const getCurrentMarginWindow = async () => {
-    return await getRequest(`/cfm/intraday/current_margin_window`);
-  };
-  
-  const getPerpetualsPortfolioSummary = async (portfolioUUID: string) => {
-    return await getRequest(`/intx/portfolio/${portfolioUUID}`);
-  };
-  
-  const listPerpetualsPositions = async (portfolioUUID: string) => {
-    return await getRequest(`/intx/positions/${portfolioUUID}`);
-  };
-  
-  const getPerpetualsPosition = async (portfolioUUID: string, symbol: string) => {
-    return await getRequest(`/intx/positions/${portfolioUUID}/${symbol}`);
-  };
-  
-  const getPortfolioBalances = async (portfolioUUID: string) => {
-    return await getRequest(`/intx/balances/${portfolioUUID}`);
-  };
+    return await this.getRequest(`/portfolios`, queryString);
+  }
 
-  export {
-    listPortfolios,
-    getPortfolioBreakdown,
-    getFuturesBalanceSummary,
-    listFuturesPositions,
-    getFuturesPosition,
-    listFuturesSweeps,
-    getIntradayMarginSetting,
-    getCurrentMarginWindow,
-    getPerpetualsPortfolioSummary,
-    listPerpetualsPositions,
-    getPerpetualsPosition,
-    getPortfolioBalances,
-  };
-  
+  async getPortfolioBreakdown(portfolioUUID: string, queryParams: object = {}): Promise<any> {
+    const queryString = new URLSearchParams(queryParams as any).toString();
+    return await this.getRequest(`/portfolios/${portfolioUUID}`, queryString);
+  }
+
+  async getFuturesBalanceSummary(): Promise<any> {
+    return await this.getRequest(`/cfm/balance_summary`);
+  }
+
+  async listFuturesPositions(): Promise<any> {
+    return await this.getRequest(`/cfm/positions`);
+  }
+
+  async getFuturesPosition(productID: string): Promise<any> {
+    return await this.getRequest(`/cfm/positions/${productID}`);
+  }
+
+  async listFuturesSweeps(): Promise<any> {
+    return await this.getRequest(`/cfm/sweeps`);
+  }
+
+  async getIntradayMarginSetting(): Promise<any> {
+    return await this.getRequest(`/cfm/intraday/margin_setting`);
+  }
+
+  async getCurrentMarginWindow(): Promise<any> {
+    return await this.getRequest(`/cfm/intraday/current_margin_window`);
+  }
+
+  async getPerpetualsPortfolioSummary(portfolioUUID: string): Promise<any> {
+    return await this.getRequest(`/intx/portfolio/${portfolioUUID}`);
+  }
+
+  async listPerpetualsPositions(portfolioUUID: string): Promise<any> {
+    return await this.getRequest(`/intx/positions/${portfolioUUID}`);
+  }
+
+  async getPerpetualsPosition(portfolioUUID: string, symbol: string): Promise<any> {
+    return await this.getRequest(`/intx/positions/${portfolioUUID}/${symbol}`);
+  }
+
+  async getPortfolioBalances(portfolioUUID: string): Promise<any> {
+    return await this.getRequest(`/intx/balances/${portfolioUUID}`);
+  }
+}
+
+export default PortfolioClient;

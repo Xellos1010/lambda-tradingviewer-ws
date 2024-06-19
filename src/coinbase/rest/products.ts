@@ -1,68 +1,69 @@
-import { getRequest } from "./utils/apiUtils";
+import BaseClient from "../BaseClient";
+import { GetBestBidAskResponse } from "./types/products/GetBestBidAskResponse";
+import { ListProductsResponse } from "./types/products/ListProductsResponse";
+import { GetProductResponse } from "./types/products/GetProductResponse";
+import { GetProductCandlesResponse } from "./types/products/GetProductCandlesResponse";
+import { GetMarketTradesResponse } from './types/products/GetMarketTrades';
+import { GetProductBookResponse } from "./types/products/GetProductBookResponse";
 
-const getBestBidAsk = async (productIDs?: string[]) => {
-  let queryString = "";
-  if (productIDs && productIDs.length > 0) {
-    queryString = productIDs.map((id) => `product_ids=${id}`).join("&");
+class ProductsClient extends BaseClient {
+  async getBestBidAsk(productIDs?: string[]): Promise<GetBestBidAskResponse> {
+    let queryString = "";
+    if (productIDs && productIDs.length > 0) {
+      queryString = productIDs.map((id) => `product_ids=${id}`).join("&");
+    }
+    return await this.getRequest(
+      "/best_bid_ask",
+      `${queryString ? `?${queryString}` : ""}`
+    );
   }
-  return await getRequest(
-    "/best_bid_ask",
-    `${queryString ? `?${queryString}` : ""}`
-  );
-};
 
-const listProducts = async () => {
-  return await getRequest(`/products`);
-};
-
-const getProduct = async (productID: string) => {
-  return await getRequest(`/products/${productID}`);
-};
-
-const getProductCandles = async (productID: string, queryParams?: object) => {
-  let queryString = "";
-  if (queryParams && Object.keys(queryParams).length > 0) {
-    queryString = Object.entries(queryParams)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
+  async listProducts(): Promise<ListProductsResponse> {
+    return await this.getRequest(`/products`);
   }
-  return await getRequest(
-    `/products/${productID}/candles`,
-    `${queryString ? `?${queryString}` : ""}`
-  );
-};
 
-const getMarketTrades = async (productID: string, queryParams?: object) => {
-  let queryString = "";
-  if (queryParams && Object.keys(queryParams).length > 0) {
-    queryString = Object.entries(queryParams)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
+  async getProduct(productID: string): Promise<GetProductResponse> {
+    return await this.getRequest(`/products/${productID}`);
   }
-  return await getRequest(
-    `/products/${productID}/ticker`,
-    `${queryString ? `?${queryString}` : ""}`
-  );
-};
 
-const getProductBook = async (queryParams?: object) => {
-  let queryString = "";
-  if (queryParams && Object.keys(queryParams).length > 0) {
-    queryString = Object.entries(queryParams)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
+  async getProductCandles(productID: string, queryParams?: object): Promise<GetProductCandlesResponse> {
+    let queryString = "";
+    if (queryParams && Object.keys(queryParams).length > 0) {
+      queryString = Object.entries(queryParams)
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
+    }
+    return await this.getRequest(
+      `/products/${productID}/candles`,
+      `${queryString ? `?${queryString}` : ""}`
+    );
   }
-  return await getRequest(
-    `/product_book`,
-    `${queryString ? `?${queryString}` : ""}`
-  );
-};
 
-export {
-  getBestBidAsk,
-  getProductBook,
-  listProducts,
-  getProduct,
-  getProductCandles,
-  getMarketTrades,
-};
+  async getMarketTrades(productID: string, queryParams?: object): Promise<GetMarketTradesResponse> {
+    let queryString = "";
+    if (queryParams && Object.keys(queryParams).length > 0) {
+      queryString = Object.entries(queryParams)
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
+    }
+    return await this.getRequest(
+      `/products/${productID}/ticker`,
+      `${queryString ? `?${queryString}` : ""}`
+    );
+  }
+
+  async getProductBook(queryParams?: object): Promise<GetProductBookResponse> {
+    let queryString = "";
+    if (queryParams && Object.keys(queryParams).length > 0) {
+      queryString = Object.entries(queryParams)
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
+    }
+    return await this.getRequest(
+      `/product_book`,
+      `${queryString ? `?${queryString}` : ""}`
+    );
+  }
+}
+
+export default ProductsClient;

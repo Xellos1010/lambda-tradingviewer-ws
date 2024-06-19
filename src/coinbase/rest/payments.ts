@@ -1,10 +1,10 @@
-import { getRequest } from "./utils/apiUtils";
+// src/coinbase/rest/payments.ts
+import BaseClient from "../BaseClient";
 
-const listPaymentMethods = async () => {
-    return await getRequest(`/payment_methods`);
-  };
+class PaymentsClient extends BaseClient {
+  async listPaymentMethods(): Promise<any> {
+    return await this.getRequest(`/payment_methods`);
+  }
+}
 
-  export {
-    listPaymentMethods,
-  };
-  
+export default PaymentsClient;

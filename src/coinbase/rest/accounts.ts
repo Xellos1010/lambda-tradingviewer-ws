@@ -1,17 +1,15 @@
-import { getRequest } from "./utils/apiUtils";
-// Function for integrated testing
-const listAccounts = async () => {
-    const path = "/accounts";
-    return await getRequest(path);
-  };
-  
-  // Specific API methods
-  const getAccount = async (accountUUID: string) => {
-    return await getRequest(`/accounts/${accountUUID}`);
-  };
-  
-  export {
-    getAccount,
-    listAccounts
-  };
-  
+import BaseClient from "../BaseClient";
+import { GetAccountResponse } from "./types/accounts/GetAccountResponse";
+import { ListAccountsResponse } from "./types/accounts/ListAccountsResponse";
+
+class AccountsClient extends BaseClient {
+  async listAccounts(): Promise<ListAccountsResponse> {
+    return await this.getRequest("/accounts");
+  }
+
+  async getAccount(accountUUID: string): Promise<GetAccountResponse> {
+    return await this.getRequest(`/accounts/${accountUUID}`);
+  }
+}
+
+export default AccountsClient;
