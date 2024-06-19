@@ -17,7 +17,7 @@ class SpotStrategy extends SpotStrategyBase {
   ): Promise<number> {
     try {
       const { available: balance } = await this.getBalance(currency);
-      const currentPrice = await this.getPrice(symbol);
+      const currentPrice = await this.getPrice();
       // Since we are placing market buys we need to place our available balance - a percentage to ensure the order places due to market fluctuation potential
       if (currentPrice > 0 && balance > 0) {
         // let qty = (balance * this.setting.data.riskPercent) / currentPrice;

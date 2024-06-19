@@ -6,13 +6,15 @@ import * as path from 'path';
 // Load environment variables from .env file
 dotenv.config();
 
-const keyFilePath = path.resolve(__dirname, '../keys/evan_cdp_api_key.json');
-const keyFileContent = fs.readFileSync(keyFilePath, 'utf8');
-const keyData = JSON.parse(keyFileContent);
-const baseUrl = process.env.COINBASE_API_BASE_URL as string;
+export const loadConfig = (keyFilePath: string) => {
+  const absoluteKeyFilePath = path.resolve(__dirname, keyFilePath);
+  const keyFileContent = fs.readFileSync(absoluteKeyFilePath, 'utf8');
+  const keyData = JSON.parse(keyFileContent);
+  const baseUrl = process.env.COINBASE_API_BASE_URL as string;
 
-export const config = {
-  keyName: keyData.name,
-  keySecret: keyData.privateKey,
-  baseUrl: baseUrl,
+  return {
+    keyName: keyData.name,
+    keySecret: keyData.privateKey,
+    baseUrl: baseUrl,
+  };
 };
