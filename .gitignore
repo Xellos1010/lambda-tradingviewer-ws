@@ -9,3 +9,4 @@ env.json
 Sandbox Coinbase API key.txt
 aws-setup-scripts/DEV/lambda-config-DEV.json
 lambda_function-DEV.zip
+*.log

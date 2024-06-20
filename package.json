@@ -30,13 +30,13 @@
     "update_env:win:dev": "./aws-setup-scripts/DEV/update_env-dev.bat",
     "update_env:win:stage": "./aws-setup-scripts/STAGE/update_env-stage.bat",
     "update_env:win:prod": "./aws-setup-scripts/PROD/update_env-prod.bat",
-    "copy:package": "copy package.json dist\\package.json && copy yarn.lock dist\\yarn.lock",
+    "copy:package": "node copy-files.js",
     "start:offline": "tsc-watch --onSuccess \"npx serverless offline\"",
     "start:serverless:offline": "npx serverless offline",
     "clean": "rimraf dist",
     "prebuild": "yarn clean",
     "build": "npx tsc --build",
-    "deploy": "cd cdk && yarn deploy",
+    "deploy": "yarn deploy",
     "postbuild": "yarn copy:package && yarn install --production --modules-folder dist/node_modules",
     "test": "jest --config=./test/jest.config.js --runInBand",
     "test:single": "jest --config=./test/jest.config.js --runInBand"
@@ -46,6 +46,7 @@
     "@types/ws": "^8.5.10",
     "dotenv": "^16.4.5",
     "dynamoose": "^4.0.1",
+    "fs-extra": "^11.2.0",
     "jsonwebtoken": "^9.0.2",
     "uuid": "^10.0.0"
   },
