@@ -1,4 +1,4 @@
-@REM aws-cli-setup\API-Gateway-LambdaFunctions\package-deploy-base.bat
+@REM package-deploy-base.bat
 @REM Has to be called form a sub-directory lambda function deploy to have the environment variables set correctly
 
 set "ZIP_FILE_FILEPATH=%~dp0zip-file.bat"

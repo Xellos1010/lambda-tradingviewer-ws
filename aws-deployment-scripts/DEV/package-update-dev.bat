@@ -1,3 +1,4 @@
+rem aws-deployment-scripts\DEV\package-update-dev.bat
 @echo off
 if not defined AWS_PROFILE set AWS_PROFILE=SystemDeveloper-Xellos
 

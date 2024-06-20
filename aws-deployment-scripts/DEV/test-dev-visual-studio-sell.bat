@@ -1,3 +1,4 @@
+rem aws-deployment-scripts\DEV\test-dev-visual-studio-sell.bat
 @echo off
 setlocal enabledelayedexpansion
 

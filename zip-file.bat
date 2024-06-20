@@ -1,4 +1,4 @@
-@REM aws-cli-setup\API-Gateway-LambdaFunctions\zip-file.bat
+@REM zip-file.bat
 
 rem Check if %ZIP_FILE% exists and delete it if it does
 if exist %ZIP_FILE% (

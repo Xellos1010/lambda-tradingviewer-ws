@@ -1,3 +1,4 @@
+rem aws-deployment-scripts\DEV\package-deploy-dev.bat
 @echo off
 setlocal enabledelayedexpansion
 

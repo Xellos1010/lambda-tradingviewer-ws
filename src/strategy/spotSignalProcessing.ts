@@ -1,7 +1,6 @@
-import { STRATEGY_ACTION_SELL, STRATEGY_ACTION_BUY } from "../constants";
-// import SpotStrategy from '../strategy/SpotStrategy';
-// import { getCognitoUser } from '../cognito';
 import CoinbaseClient from "../coinbase/CoinbaseClient";
+import { STRATEGY_ACTION_SELL, STRATEGY_ACTION_BUY } from "../constants";
+
 import {
   executePlaceSellOrder,
   executePlaceBuyOrder,

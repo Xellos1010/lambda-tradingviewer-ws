@@ -1,4 +1,4 @@
-@REM aws-cli-setup\API-Gateway-LambdaFunctions\package-update-base.bat
+@REM package-update-base.bat
 @echo off
 setlocal
 
