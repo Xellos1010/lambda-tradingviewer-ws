@@ -4,5 +4,5 @@ envs.sh
 dist
 .env
 env.json
-
 .serverless
+/src/keys
