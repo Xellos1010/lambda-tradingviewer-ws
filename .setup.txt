@@ -39,7 +39,7 @@ Zip the File
 7z a -r lambda_function.zip *
 
 Create the Lambda Function
-aws lambda create-function --function-name tradingview-webhook --runtime nodejs18.x --role arn:aws:iam::"AccountNumber":role/LambdaExecutionRole --handler index.handler --zip-file fileb://lambda_function.zip --profile SystemDeveloper
+aws lambda create-function --function-name tradingview-webhook --runtime nodejs20.x --role arn:aws:iam::"AccountNumber":role/LambdaExecutionRole --handler index.handler --zip-file fileb://lambda_function.zip --profile SystemDeveloper
 
 Create the Log Group for the Lambda Function
 aws logs create-log-group --log-group-name /aws/lambda/tradingview-webhook --profile SystemDeveloper

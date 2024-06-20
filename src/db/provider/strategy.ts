@@ -1,7 +1,7 @@
 import StrategyModel, {StrategyDocument} from '../model/strategy'
 import Base from './base'
 import {STRATEGY_STATUS} from '../../constants'
-import {getOrderPrice} from '../../helper/order'
+import {getOrderPrice} from '../../helpers/order'
 import * as dynamoose from "dynamoose";
 
 class Strategy extends Base<StrategyDocument, TStrategy> {

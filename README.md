@@ -37,16 +37,12 @@ Create a `.env` file in the root directory and populate it with the following en
 ```
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
-AWS_REGION=eu-central-1
+AWS_REGION=us-east-1
 DYNAMODB_HOLD_TABLE=TV-Bot-HoldTable
 DYNAMODB_SETTING_TABLE=TV-Bot-SettingTable
 DYNAMODB_STRATEGY_TABLE=TV-Bot-StrategyTable
 DYNAMODB_ORDERS_TABLE=TV-Bot-OrdersTable
-BINANCE_API_KEY=
-BINANCE_API_SECRET=
-COINBASE_API_PASSPHRASE=
-COINBASE_API_KEY=
-COINBASE_API_SECRET=
+COINBASE_API_BASE_URL=api.coinbase.com/api/v3/brokerage
 ```
 
 ## Deployment

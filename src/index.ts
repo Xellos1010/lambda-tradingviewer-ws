@@ -52,14 +52,14 @@ export const handler: APIGatewayProxyHandler = async (
   const asset = config.strategy.asset;
   const currency = config.strategy.currency;
 
-  // We only have 1 strategy right now for the dry run.
-  const type = config.strategy.type;
+  // We only have 1 strategy right now for the dry run so we won't need to pass this value
+  // const type = config.strategy.type;
 
   // Create a client for each key and execute the strategy for each client
   const promises = config.coinbase.keys.map(async (keyData) => {
     
     const client = new CoinbaseClient(Config.getInstance(keyData.name, keyData.privateKey, config.coinbase.baseUrl));
-    return await signalSpotProcessing(client, action, asset, currency, type);
+    return await signalSpotProcessing(client, action, asset, currency);
   });
 
   try {

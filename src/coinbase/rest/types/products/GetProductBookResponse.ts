@@ -1,5 +1,4 @@
-import { PriceBook } from "./ProductBook";
-
+import { PriceBook } from "./PriceBook";
 
 export interface GetProductBookResponse {
   pricebook: PriceBook;
