@@ -1,40 +1,30 @@
-// src\utils\bodyParser.ts
-import { Body } from '../data/model/recieving_data';
+import { Body } from '../data/schemas/recieving_data';
 
 export const parseBody = (str: string): Body => {
-  const result: any = {};
-  let key = '';
-  let value = '';
-  let insideParentheses = false;
+  // First, parse the JSON string to remove extra quotes
+  const parsedJson = JSON.parse(str);
 
-  for (let i = 0; i < str.length; i++) {
-    const char = str[i];
-    if (char === '(') insideParentheses = true;
-    if (char === ')') insideParentheses = false;
-
-    if (char === ',' && !insideParentheses) {
-      result[key.trim()] = value.trim();
-      key = '';
-      value = '';
-    } else if (char === ':' && key === '') {
-      key = value;
-      value = '';
-    } else {
-      value += char;
+  // Now, we need to remove the extra quotes from the keys and values
+  const cleanedJson: { [key: string]: string } = {};
+  for (const key in parsedJson) {
+    if (parsedJson.hasOwnProperty(key)) {
+      const cleanedKey = key.replace(/^"|"$/g, '');
+      const cleanedValue = parsedJson[key].replace(/^"|"$/g, '');
+      cleanedJson[cleanedKey] = cleanedValue;
     }
   }
 
-  if (key !== '') {
-    result[key.trim()] = value.trim();
+  // Ensure all required properties are present
+  if (!cleanedJson.strategy_name || !cleanedJson.strategy_params || !cleanedJson.order_action || !cleanedJson.contracts || !cleanedJson.ticker || !cleanedJson.position_size) {
+    throw new Error('Missing required properties in the parsed body');
   }
 
   return {
-    strategy_name: result.strategy_name,
-    strategy_params: result.strategy_params,
-    order_action: result.order_action,
-    contracts: result.contracts,
-    ticker: result.ticker,
-    position_size: result.position_size,
-    // Add other expected properties here
+    strategy_name: cleanedJson.strategy_name,
+    strategy_params: cleanedJson.strategy_params,
+    order_action: cleanedJson.order_action,
+    contracts: cleanedJson.contracts,
+    ticker: cleanedJson.ticker,
+    position_size: cleanedJson.position_size,
   };
 };

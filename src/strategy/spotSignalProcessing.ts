@@ -30,5 +30,6 @@ export const signalSpotProcessing = async (
     //   }
   } catch (e) {
     console.error("signalSpotProcessing error", e);
+    throw (e);
   }
 };

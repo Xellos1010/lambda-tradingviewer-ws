@@ -6,7 +6,8 @@ provider:
 
 functions:
   signalProcessor:
-    handler: dist/index.js
+    handler: dist/index.handler
+    timeout: 300 # Set timeout to 300 seconds (5 minutes)
     events:
       - http:
           path: process-signal

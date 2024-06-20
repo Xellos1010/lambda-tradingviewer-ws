@@ -87,6 +87,6 @@ export const DEFAULT_STRATEGY_OPTIONS = {
     RISK_PERCENT: 0.2,
     MIN_AMOUNT_USDT: 200,
 }
-export const STRATEGY_ACTION_SELL = 'sell'
-export const STRATEGY_ACTION_BUY = 'buy'
-export const BOT_STAT = 'stat'
+export const STRATEGY_ACTION_SELL = 'SELL'
+export const STRATEGY_ACTION_BUY = 'BUY'
+export const BOT_STAT = 'STAT'
