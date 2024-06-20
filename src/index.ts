@@ -4,7 +4,7 @@ import config from './config';
 import Config from './coinbase/config/Config';
 import { errorResponse, successResponse } from "./utils/responses";
 import { parseBody } from "./utils/bodyParser";
-import CoinbaseClient from './coinbase/coinbaseClient';
+import CoinbaseClient from './coinbase/CoinbaseClient';
 import { getAction } from "./utils/getAction";
 import { signalSpotProcessing } from "./strategy/spotSignalProcessing";
 

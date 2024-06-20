@@ -1,7 +1,7 @@
 import { STRATEGY_ACTION_SELL, STRATEGY_ACTION_BUY } from '../constants';
 // import SpotStrategy from '../strategy/SpotStrategy';
 // import { getCognitoUser } from '../cognito';
-import CoinbaseClient from '../coinbase/coinbaseClient';
+import CoinbaseClient from '../coinbase/CoinbaseClient';
 
 export const signalSpotProcessing = async (client: CoinbaseClient, action: string, asset: string, currency: string, type: string): Promise<any> => {
     try {

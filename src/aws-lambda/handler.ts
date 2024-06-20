@@ -9,7 +9,7 @@ import {
   import cognito from "../cognito/cognito";
   import { errorResponse, successResponse } from "../utils/responses";
   import { parseBody } from "../utils/bodyParser";
-  import CoinbaseClient from '../coinbase/coinbaseClient';
+  import CoinbaseClient from '../coinbase/CoinbaseClient';
   import { Body } from '../data/model/recieving_data';
   
   type TAction = typeof STRATEGY_ACTION_SELL | typeof STRATEGY_ACTION_BUY;
