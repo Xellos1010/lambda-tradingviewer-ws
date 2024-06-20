@@ -6,3 +6,4 @@ dist
 env.json
 .serverless
 /src/keys
+Sandbox Coinbase API key.txt
