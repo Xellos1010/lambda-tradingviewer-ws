@@ -18,30 +18,34 @@ set STAGE=dev
 set ENV=DEV
 set FUNCTION=TV-Lambda-Bot
 set FUNCTION_NAME=%FUNCTION%-%ENV%
-set HANDLER=index.handler
 set ZIP_FILE=lambda_function-%ENV%.zip
 
-rem Update the API Gateway Integration (assuming the api_id is already known and set)
+rem Get the current directory
+set "CURRENT_DIR=%CD%"
 
+@REM echo %CD%
 
-rem Check if %ZIP_FILE% exists and delete it if it does
-if exist %ZIP_FILE% (
-    echo Deleting existing ZIP file: %ZIP_FILE%
-    echo Deleting existing ZIP file: %ZIP_FILE% >> %LOG_FILE% 2>&1
-    del %ZIP_FILE% >> %LOG_FILE% 2>&1
+rem Remove trailing backslash if present
+if "%CURRENT_DIR:~-1%"=="\" (
+    set "CURRENT_DIR=%CURRENT_DIR:~0,-1%"
 )
 
-rem Compress files using 7z
-echo Compressing project files into ZIP...
-echo Compressing project files into ZIP... >> %LOG_FILE% 2>&1
-7z a %ZIP_FILE% index.js package.json node_modules\* utilities\* >> %LOG_FILE% 2>&1
-echo Compression complete.
+rem Find the last occurrence of a backslash to get the parent directory
+for %%I in ("%CURRENT_DIR%") do (
+    set "PARENT_DIR=%%~dpI"
+)
 
-rem Execute AWS CLI command to update Lambda function code
-echo Deploying Lambda function with AWS CLI...
-echo Deploying Lambda function with AWS CLI... >> %LOG_FILE% 2>&1
-aws lambda update-function-code --function-name %FUNCTION_NAME% --zip-file fileb://%ZIP_FILE% --profile %AWS_PROFILE%  >> %LOG_FILE% 2>&1
+@REM set "BASE_SCRIPT_FILE_PATH=%PARENT_DIR%package-deploy-base.bat"
+set "BASE_SCRIPT_FILE_PATH=%CD%\package-update-base.bat"
+echo Base script filepath: %BASE_SCRIPT_FILE_PATH%
+echo Base script filepath: %BASE_SCRIPT_FILE_PATH% >> %LOG_FILE% 2>&1
 
-echo "Lambda function code updated."
-echo "Lambda function code updated." >> %LOG_FILE% 2>&1
-pause
+echo Executing Base Operation
+echo Executing Base Operation >> %LOG_FILE% 2>&1
+
+call %BASE_SCRIPT_FILE_PATH%
+
+:end
+echo Script execution completed.
+echo Script execution completed. >> %LOG_FILE% 2>&1
+rem End of script

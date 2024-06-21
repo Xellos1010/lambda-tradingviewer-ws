@@ -22,7 +22,9 @@
     "setup_apikey:win:dev": "./aws-setup-scripts/DEV/setupApiKey-dev.bat",
     "test:mac:dev": "./test.sh",
     "test-buy:win:local:dev": "./aws-deployment-scripts/DEV/test-dev-visual-studio-buy.bat",
+    "test-buy:win:server:dev": "./aws-deployment-scripts/DEV/test-dev-lambda-buy.bat",
     "test-sell:win:local:dev": "./aws-deployment-scripts/DEV/test-dev-visual-studio-sell.bat",
+    "test-sell:win:server:dev": "./aws-deployment-scripts/DEV/test-dev-lambda-sell.bat",
     "update_function:win:dev": "./aws-deployment-scripts/DEV/package-update-dev.bat",
     "update_function:win:stage": "./aws-deployment-scripts/STAGE/package-update-stage.bat",
     "update_function:win:prod": "./aws-deployment-scripts/PROD/package-update-prod.bat",
@@ -44,6 +46,7 @@
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.6",
     "@types/ws": "^8.5.10",
+    "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "dynamoose": "^4.0.1",
     "fs-extra": "^11.2.0",

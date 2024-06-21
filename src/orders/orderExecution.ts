@@ -1,7 +1,7 @@
-// import {
-//   calculateBuySize,
-//   calculateSellSize,
-// } from "../helpers/sizeCalculations";
+import {
+  calculateBuySize,
+  calculateSellSize,
+} from "../helpers/sizeCalculations";
 import {
   calculateBuyPrice,
   calculateSellPrice,
@@ -38,13 +38,13 @@ export const executePlaceBuyOrder = async (
     const marketData = await client.products?.getMarketTrades(product_id);
 
     // 3) Set the fixed buy size
-    const buySize = 0.00000001;//calculateBuySize(currencyAccount);
+    const buySize = calculateBuySize(currencyAccount); //0.00000001;//
 
     // 4) Calculate the optimal buy price based on buy size and percentage
     const optimalBuyPrice = calculateBuyPrice(
       marketData as GetMarketTradesResponse,
       buySize,
-      0.1 //TODO This is statically typed and should be an exposed variable based on strategy
+      0.5 //This is statically typed and should be an exposed variable based on strategy
     );
 
     // 5) Place a Buy Order with a 10-minute cancel policy
@@ -64,6 +64,12 @@ export const executePlaceBuyOrder = async (
       buySize.toString(),
       clientOrderID,
       orderConfig
+    );
+    // Log the successful submission of the buy order
+    console.log(
+      `Successfully submitted buy order. Order details: Product ID: ${product_id}, Size: ${buySize}, Client Order ID: ${clientOrderID}, Order Config: ${JSON.stringify(
+        orderConfig
+      )}`
     );
   } catch (error) {
     console.error("Error placing buy order:", error);
@@ -98,13 +104,13 @@ export const executePlaceSellOrder = async (
     const marketData = await client.products?.getMarketTrades(product_id);
 
     // 3) Calculate the sell size based on the asset account balance
-    const sellSize = 0.00000001;//calculateSellSize(assetAccount);
+    const sellSize = calculateSellSize(assetAccount); //0.00000001;//
 
     // 4) Calculate the optimal sell price based on sell size and percentage
     const optimalSellPrice = calculateSellPrice(
       marketData as GetMarketTradesResponse,
       sellSize,
-      0.1 //TODO This is statically typed and should be an exposed variable based on strategy
+      0.5 //This is statically typed and should be an exposed variable based on strategy
     );
 
     // 5) Place a Sell Order with a 10-minute cancel policy
@@ -124,6 +130,12 @@ export const executePlaceSellOrder = async (
       sellSize.toString(),
       clientOrderID,
       orderConfig
+    );
+    // Log the successful submission of the sell order
+    console.log(
+      `Successfully submitted sell order. Order details: Product ID: ${product_id}, Size: ${sellSize}, Client Order ID: ${clientOrderID}, Order Config: ${JSON.stringify(
+        orderConfig
+      )}`
     );
   } catch (error) {
     console.error("Error placing sell order:", error);

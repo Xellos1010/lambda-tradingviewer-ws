@@ -43,7 +43,7 @@ export default {
     region: process.env.AWS_COGNITO_REGION,
   },
   coinbase: {
-    baseUrl: process.env.COINBASE_API_BASE_URL as string,
+    baseUrl: "api.coinbase.com/api/v3/brokerage" as string,
     keys: coinbaseKeys
   }
 };

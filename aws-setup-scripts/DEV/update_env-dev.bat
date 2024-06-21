@@ -26,7 +26,7 @@ if not "%CD%"=="%SCRIPT_DIR_UPDATE_ENV%" (
     echo Already in the script location >> %LOG_FILE%
 )
 
-aws lambda update-function-configuration --function-name %FUNCTION_NAME% --timeout 10 --profile %AWS_PROFILE%>> %LOG_FILE% 2>&1
+aws lambda update-function-configuration --function-name %FUNCTION_NAME% --timeout 20 --profile %AWS_PROFILE%>> %LOG_FILE% 2>&1
 aws lambda update-function-configuration --function-name %FUNCTION_NAME% --environment file://lambda-config-%ENV%.json --profile %AWS_PROFILE%>> %LOG_FILE% 2>&1
 
 :end

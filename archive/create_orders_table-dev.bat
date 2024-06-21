@@ -1,1 +1,0 @@
-aws dynamodb create-table --table-name TV-Bot-OrdersTable-DEV --billing-mode PAY_PER_REQUEST --profile SystemDeveloper-Xellos
