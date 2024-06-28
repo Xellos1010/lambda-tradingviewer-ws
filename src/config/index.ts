@@ -19,6 +19,12 @@ const readAllKeyFiles = () => {
   return keyFiles.map(file => readKeyFile(path.join(keysDir, file)));
 };
 
+export const getAllKeyFilePaths = (): string[] => {
+  const keysDir = path.resolve(__dirname, '../keys');
+  const keyFiles = fs.readdirSync(keysDir).filter(file => file.endsWith('.json'));
+  return keyFiles.map(file => path.join(keysDir, file));
+};
+
 // Read all key files for Coinbase API
 const coinbaseKeys = readAllKeyFiles();
 
