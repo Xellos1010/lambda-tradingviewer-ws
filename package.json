@@ -61,6 +61,7 @@
     "@types/node": "^20.14.9",
     "@types/uuid": "^9.0.8",
     "aws-sdk": "^2.1147.0",
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "jest-extended": "^4.0.2",
     "rimraf": "^5.0.7",
