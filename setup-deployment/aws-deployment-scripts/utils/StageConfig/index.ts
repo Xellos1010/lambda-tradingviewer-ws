@@ -19,7 +19,12 @@ export const setupStageConfig = (
         HANDLER: 'index.handler',
         REGION: process.env.AWS_REGION || 'us-east-1',
         RUNTIME: 'nodejs20.x',
+        AWS_PROFILE: process.env.AWS_PROFILE,
     };
+
+    if (baseConfig.AWS_PROFILE == undefined) {
+        throw new Error("AWS_PROFILE is undefined. Set in the .env how aws-cli profile to use");
+    }
 
     const ENV = stage.toUpperCase();
     const FUNCTION_NAME = `${envConfig.FUNCTION_NAME}-${ENV}`;

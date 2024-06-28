@@ -1,4 +1,5 @@
 export type StageConfig = {
+    AWS_PROFILE?:string, //TODO: Add hard requirement for aws profile
     STAGE: string;
     ENV: string;
     LOGS_DIR: string;

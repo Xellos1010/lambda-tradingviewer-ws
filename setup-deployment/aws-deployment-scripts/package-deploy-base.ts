@@ -1,8 +1,8 @@
-// import { executeCommand } from './utils/ExecuteCommands';
+// setup-deployment/aws-deployment-scripts/package-deploy-base.ts
 import { setupLogFile, logMessage } from './utils/logger';
-// import { execSync } from 'child_process';
 import { getStageConfig } from './utils/StageConfig';
 import { compressProjectFiles } from './utils/zip-file';
+import { CreateTablesDEV } from '../aws-setup-scripts/DEV/create_tables-dev';
 
 export const deployBasePackage = () => {
     // Initialize configuration
@@ -32,8 +32,9 @@ export const deployBasePackage = () => {
 
     // Call the script to create the tables
     logMessage(LOG_FILE, 'Calling script to create the tables');
-    // executeCommand(`ts-node aws-setup-scripts/${stageConfig.ENV}/create_tables-${stageConfig.STAGE}.ts`, LOG_FILE);
-    // logMessage(LOG_FILE, 'Role creation and policy assignment script execution completed.');
+    const createTablesDEV = new CreateTablesDEV(AWS_PROFILE, LOG_FILE);
+    createTablesDEV.setupAndCreateTables();
+    logMessage(LOG_FILE, 'Table Creation is Complete.');
 
     // // Call the script to create the roles and assign the policies
     // logMessage(LOG_FILE, 'Calling script to create roles and assign policies.');
