@@ -1,0 +1,8 @@
+{
+  "startTime": 6045.633474,
+  "endTime": 6531.707252,
+  "listAccountsTime": 226.93337499999961,
+  "getMarketTradesTime": 98.65845300000001,
+  "generateClientOrderIDTime": 0.18024999999943248,
+  "createBuyOrderTime": 146.2378490000001
+}

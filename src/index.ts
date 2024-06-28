@@ -1,11 +1,10 @@
 import { APIGatewayProxyHandler, APIGatewayProxyEvent } from "aws-lambda";
-import config from './config';
-import Config from './coinbase/config/Config';
 import { errorResponse, successResponse } from "./utils/responses";
 import { parseBody } from "./utils/bodyParser";
 import { getAction } from "./utils/getAction";
 import { signalSpotProcessing } from "./strategy/spotSignalProcessing";
-import CoinbaseClient from './coinbase/CoinbaseClient';
+import config from "./config";
+import { CoinbaseClient, KeyFileConfig, loadKeyfile } from "coinbase-advanced-node-ts";
 
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
@@ -35,8 +34,11 @@ export const handler: APIGatewayProxyHandler = async (
     const asset = config.strategy.asset;
     const currency = config.strategy.currency;
 
-    const promises = config.coinbase.keys.map(async (keyData) => {
-      const client = new CoinbaseClient(Config.getInstance(keyData.name, keyData.privateKey, config.coinbase.baseUrl));
+    const promises = config.coinbase.keys.map(async (keyFilePath) => {
+      const config = loadKeyfile(keyFilePath);
+      const client = new CoinbaseClient(
+        KeyFileConfig.getInstance(config.name, config.privateKey)
+      );
       return await signalSpotProcessing(client, action, asset, currency);
     });
 

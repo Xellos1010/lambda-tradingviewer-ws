@@ -5,20 +5,6 @@ import path from 'path';
 
 dotenv.config();
 
-// Function to read key file
-const readKeyFile = (filePath: string) => {
-  const keyFilePath = path.resolve(__dirname, filePath);
-  const keyFileContent = fs.readFileSync(keyFilePath, 'utf8');
-  return JSON.parse(keyFileContent);
-};
-
-// Function to read all key files in the keys directory
-const readAllKeyFiles = () => {
-  const keysDir = path.resolve(__dirname, '../keys');
-  const keyFiles = fs.readdirSync(keysDir).filter(file => file.endsWith('.json'));
-  return keyFiles.map(file => readKeyFile(path.join(keysDir, file)));
-};
-
 export const getAllKeyFilePaths = (): string[] => {
   const keysDir = path.resolve(__dirname, '../keys');
   const keyFiles = fs.readdirSync(keysDir).filter(file => file.endsWith('.json'));
@@ -26,7 +12,7 @@ export const getAllKeyFilePaths = (): string[] => {
 };
 
 // Read all key files for Coinbase API
-const coinbaseKeys = readAllKeyFiles();
+const coinbaseKeys = getAllKeyFilePaths();
 
 export default {
   tables: {

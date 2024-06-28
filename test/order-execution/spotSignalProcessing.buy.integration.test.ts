@@ -1,13 +1,13 @@
 // test\spotSignalProcessing.buy.integration.test.ts
 import { performance } from 'perf_hooks';
-import fs from 'fs';
-import path from 'path';
-import CoinbaseClient from "../src/coinbase/CoinbaseClient";
-import config from "../src/config";
-import Config from './../src/coinbase/config/Config';
-import { Account } from '../src/coinbase/rest/types/accounts/Account';
-import { GetMarketTradesResponse } from '../src/coinbase/rest/types/products/GetMarketTrades';
-import { ListAccountsResponse } from './../src/coinbase/rest/types/accounts/ListAccountsResponse';
+import { getAllKeyFilePaths } from "../../src/config";
+import { CoinbaseClient, KeyFileConfig, loadKeyfile } from 'coinbase-advanced-node-ts';
+import { GetMarketTradesParams, GetMarketTradesResponse } from 'coinbase-advanced-node-ts/dist/rest/types/products';
+import { Account } from 'coinbase-advanced-node-ts/dist/rest/types/accounts/Account';
+import { ListAccountsResponse } from 'coinbase-advanced-node-ts/dist/rest/types/accounts';
+import { calculateBuyPrice } from '../../src/helpers/priceCalculations';
+import { calculateBuySize } from '../../src/helpers/sizeCalculations';
+import { writePerformanceDataToFile } from '../utils/writePerformanceDataToFile';
 
 describe("Coinbase API Integration Test - Buy Order", () => {
   it("should create a buy order, preview it, edit it, and then cancel it", async () => {
@@ -21,12 +21,10 @@ describe("Coinbase API Integration Test - Buy Order", () => {
     };
 
     try {
+      const firstKeyFile = getAllKeyFilePaths()[0];
+      const config = loadKeyfile(firstKeyFile);
       const client = new CoinbaseClient(
-        Config.getInstance(
-          config.coinbase.keys[0].name,
-          config.coinbase.keys[0].privateKey,
-          config.coinbase.baseUrl
-        )
+        KeyFileConfig.getInstance(config.name, config.privateKey)
       );
 
       // 1) List accounts and find the asset and currency account
@@ -34,9 +32,11 @@ describe("Coinbase API Integration Test - Buy Order", () => {
       const accountsData = await client.accounts?.listAccounts();
       timings.listAccountsTime = performance.now() - startListAccounts;
 
+      const params: GetMarketTradesParams = { limit: 100 };
+
       // 2) Calculate the current market price for asset and the order book for the asset
       const startGetMarketTrades = performance.now();
-      const marketData = await client.products?.getMarketTrades('BTC-USD'); // Replace 'BTC-USD' with the relevant asset pair
+      const marketData = await client.products?.getMarketTrades('BTC-USD', params); // Replace 'BTC-USD' with the relevant asset pair
       timings.getMarketTradesTime = performance.now() - startGetMarketTrades;
 
       console.log("Accounts Data:", accountsData);
@@ -62,15 +62,24 @@ describe("Coinbase API Integration Test - Buy Order", () => {
       console.log("Asset Account:", assetAccount);
       console.log("Currency Account:", currencyAccount);
 
-      // 3) Calculate how much of the asset can be bought and at what price
-      const buyPrice = calculateBuyPrice(marketData as GetMarketTradesResponse);
-      const buySize = calculateBuySize(currencyAccount);
-      const testBuySize = 0.00000001;
+      let buySize;
+      try {
+        buySize = calculateBuySize(assetAccount, 0.01); // 1% of the available balance
+      } catch (error) {
+        console.error("Error calculating sell size:", error);
+        buySize = 0.0000001; // Gracefully default to the minimum sell size
+      }
+      
+      const buyPrice = calculateBuyPrice(marketData as GetMarketTradesResponse, buySize, 0.10);
+      let amountToBuy = parseFloat((buySize / buyPrice).toFixed(7)); // Limit to 7 decimal places
+      if (amountToBuy < 0.0000001) {
+        amountToBuy = 0.0000001; // Default to minimum sell size
+      }
 
       console.log("Calculated Buy Price:", buyPrice);
       console.log("Calculated Buy Size:", buySize);
-      console.log("Setting Test Buy Size To:", testBuySize);
-      
+      console.log("Amount to Buy:", amountToBuy);
+
       // 4) Place a Buy Order with a 10 minute cancel policy
       const orderConfig = {
         limit_price: buyPrice.toString(),
@@ -87,7 +96,7 @@ describe("Coinbase API Integration Test - Buy Order", () => {
       }
 
       const startCreateBuyOrder = performance.now();
-      const buyOrder = await client.orders?.createBuyOrder('BTC-USD', testBuySize.toString(), clientOrderID, orderConfig); // Replace 'BTC-USD' with the relevant asset pair
+      const buyOrder = await client.orders?.createBuyOrder('BTC-USD', amountToBuy.toString(), clientOrderID, orderConfig); // Replace 'BTC-USD' with the relevant asset pair
       timings.createBuyOrderTime = performance.now() - startCreateBuyOrder;
 
       console.log("Buy Order placed:", buyOrder);
@@ -105,46 +114,3 @@ describe("Coinbase API Integration Test - Buy Order", () => {
     }
   });
 });
-
-// Helper function to calculate the buy price based on market data
-function calculateBuyPrice(marketData: GetMarketTradesResponse): number {
-  if (!marketData || !marketData.trades || marketData.trades.length === 0) {
-    console.error("Market data is empty or invalid:", marketData);
-    throw new Error("Market data is empty or invalid");
-  }
-
-  // Assuming you want to use the best bid price for the buy order
-  const bestBid = marketData.best_bid;
-
-  if (!bestBid) {
-    console.error("Best bid price is not available in market data:", marketData);
-    throw new Error("Best bid price is not available");
-  }
-
-  return parseFloat(bestBid); // Convert string to number
-}
-
-// Helper function to calculate the buy size based on the currency account balance
-function calculateBuySize(currencyAccount: Account): number {
-  if (!currencyAccount || !currencyAccount.available_balance || parseFloat(currencyAccount.available_balance.value) <= 0) {
-    console.error("Currency account balance is invalid:", currencyAccount);
-    throw new Error("Currency account balance is invalid");
-  }
-
-  // Implement your logic to calculate the buy size
-  return parseFloat(currencyAccount.available_balance.value); // Convert string to number
-}
-
-// Helper function to write performance data to a file
-function writePerformanceDataToFile(testName: string, timings: any) {
-  const dir = path.join(__dirname, '..', 'testResults');
-  const filePath = path.join(dir, `${testName}_performanceMetrics.json`);
-
-  // Ensure the testResults directory exists
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-
-  // Write the timings object to a file
-  fs.writeFileSync(filePath, JSON.stringify(timings, null, 2));
-}

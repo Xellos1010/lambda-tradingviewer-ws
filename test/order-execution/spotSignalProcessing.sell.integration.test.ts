@@ -1,13 +1,13 @@
 // test\spotSignalProcessing.sell.integration.test.ts
 import { performance } from 'perf_hooks';
-import fs from 'fs';
-import path from 'path';
-import CoinbaseClient from "../src/coinbase/CoinbaseClient";
-import config from "../src/config";
-import Config from '../src/coinbase/config/Config';
-import { Account } from '../src/coinbase/rest/types/accounts/Account';
-import { GetMarketTradesResponse } from '../src/coinbase/rest/types/products/GetMarketTrades';
-import { ListAccountsResponse } from '../src/coinbase/rest/types/accounts/ListAccountsResponse';
+import { getAllKeyFilePaths } from "../../src/config";
+import { CoinbaseClient, KeyFileConfig, loadKeyfile } from 'coinbase-advanced-node-ts';
+import { GetMarketTradesParams, GetMarketTradesResponse } from 'coinbase-advanced-node-ts/dist/rest/types/products';
+import { Account } from 'coinbase-advanced-node-ts/dist/rest/types/accounts/Account';
+import { ListAccountsResponse } from 'coinbase-advanced-node-ts/dist/rest/types/accounts';
+import { calculateSellPrice } from '../../src/helpers/priceCalculations';
+import { calculateSellSize } from '../../src/helpers/sizeCalculations';
+import { writePerformanceDataToFile } from '../utils/writePerformanceDataToFile';
 
 describe("Coinbase API Integration Test - Sell Order", () => {
   it("should create a sell order, preview it, edit it, and then cancel it", async () => {
@@ -21,12 +21,10 @@ describe("Coinbase API Integration Test - Sell Order", () => {
     };
 
     try {
+      const firstKeyFile = getAllKeyFilePaths()[0];
+      const config = loadKeyfile(firstKeyFile);
       const client = new CoinbaseClient(
-        Config.getInstance(
-          config.coinbase.keys[0].name,
-          config.coinbase.keys[0].privateKey,
-          config.coinbase.baseUrl
-        )
+        KeyFileConfig.getInstance(config.name, config.privateKey)
       );
 
       // 1) List accounts and find the asset and currency account
@@ -34,9 +32,11 @@ describe("Coinbase API Integration Test - Sell Order", () => {
       const accountsData = await client.accounts?.listAccounts();
       timings.listAccountsTime = performance.now() - startListAccounts;
 
+      const params: GetMarketTradesParams = { limit: 100 };
+
       // 2) Calculate the current market price for asset and the order book for the asset
       const startGetMarketTrades = performance.now();
-      const marketData = await client.products?.getMarketTrades('BTC-USD'); // Replace 'BTC-USD' with the relevant asset pair
+      const marketData = await client.products?.getMarketTrades('BTC-USD', params); // Replace 'BTC-USD' with the relevant asset pair
       timings.getMarketTradesTime = performance.now() - startGetMarketTrades;
 
       console.log("Accounts Data:", accountsData);
@@ -62,15 +62,25 @@ describe("Coinbase API Integration Test - Sell Order", () => {
       console.log("Asset Account:", assetAccount);
       console.log("Currency Account:", currencyAccount);
 
-      // 3) Calculate how much of the asset can be sold for and what price the asset can be sold for
-      const sellPrice = calculateSellPrice(marketData as GetMarketTradesResponse);
-      const sellSize = calculateSellSize(assetAccount);
-      const testSellSize = 0.00000001;
-
+      // 3) Calculate how much of the asset can be sold and at what price
+      
+      let sellSize;
+      try {
+        sellSize = calculateSellSize(assetAccount, 0.01); // 1% of the available balance
+      } catch (error) {
+        console.error("Error calculating sell size:", error);
+        sellSize = 0.0000001; // Gracefully default to the minimum sell size
+      }
+      
+      const sellPrice = calculateSellPrice(marketData as GetMarketTradesResponse, sellSize, 0.10);
+      let amountToSell = parseFloat((sellSize / sellPrice).toFixed(7)); // Limit to 7 decimal places
+      if (amountToSell < 0.0000001) {
+        amountToSell = 0.0000001; // Default to minimum sell size
+      }
       console.log("Calculated Sell Price:", sellPrice);
       console.log("Calculated Sell Size:", sellSize);
-      console.log("Setting Test Sell Size To:", testSellSize);
-      
+      console.log("Amount to Sell:", amountToSell);
+
       // 4) Place a Sell Order with a 10 minute cancel policy
       const orderConfig = {
         limit_price: sellPrice.toString(),
@@ -87,7 +97,7 @@ describe("Coinbase API Integration Test - Sell Order", () => {
       }
 
       const startCreateSellOrder = performance.now();
-      const sellOrder = await client.orders?.createSellOrder('BTC-USD', testSellSize.toString(), clientOrderID, orderConfig); // Replace 'BTC-USD' with the relevant asset pair
+      const sellOrder = await client.orders?.createSellOrder('BTC-USD', amountToSell.toString(), clientOrderID, orderConfig); // Replace 'BTC-USD' with the relevant asset pair
       timings.createSellOrderTime = performance.now() - startCreateSellOrder;
 
       console.log("Sell Order placed:", sellOrder);
@@ -105,46 +115,3 @@ describe("Coinbase API Integration Test - Sell Order", () => {
     }
   });
 });
-
-// Helper function to calculate the sell price based on market data
-function calculateSellPrice(marketData: GetMarketTradesResponse): number {
-  if (!marketData || !marketData.trades || marketData.trades.length === 0) {
-    console.error("Market data is empty or invalid:", marketData);
-    throw new Error("Market data is empty or invalid");
-  }
-
-  // Assuming you want to use the best ask price for the sell order
-  const bestAsk = marketData.best_ask;
-
-  if (!bestAsk) {
-    console.error("Best ask price is not available in market data:", marketData);
-    throw new Error("Best ask price is not available");
-  }
-
-  return parseFloat(bestAsk); // Convert string to number
-}
-
-// Helper function to calculate the sell size based on the asset account balance
-function calculateSellSize(assetAccount: Account): number {
-  if (!assetAccount || !assetAccount.available_balance || parseFloat(assetAccount.available_balance.value) <= 0) {
-    console.error("Asset account balance is invalid:", assetAccount);
-    throw new Error("Asset account balance is invalid");
-  }
-
-  // Implement your logic to calculate the sell size
-  return parseFloat(assetAccount.available_balance.value); // Convert string to number
-}
-
-// Helper function to write performance data to a file
-function writePerformanceDataToFile(testName: string, timings: any) {
-  const dir = path.join(__dirname, '..', 'testResults');
-  const filePath = path.join(dir, `${testName}_performanceMetrics.json`);
-
-  // Ensure the testResults directory exists
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-
-  // Write the timings object to a file
-  fs.writeFileSync(filePath, JSON.stringify(timings, null, 2));
-}

@@ -1,13 +1,12 @@
 import BaseApiSpotService from '../src/provider/BaseApiSpotService'
 import {ORDER} from "../src/constants";
 import {handler} from "../src";
-import {handler as cronHandler} from "../src/cron";
 import config from "../src/config";
 import strategyProvider from "../src/db/provider/strategy";
 import holdProvider from "../src/db/provider/hold";
 import {STRATEGY_STATUS} from "../src/constants";
 import {clearDB} from "./helper";
-import {getOrderQuantity, getOrderPrice} from "../src/helper/order";
+
 import {HOLD_STATUS} from "../src/constants";
 
 jest.mock('../src/provider/BaseApiSpotService');
