@@ -28,7 +28,7 @@ export const setupStageConfig = (
 
     const ENV = stage.toUpperCase();
     const FUNCTION_NAME = `${envConfig.FUNCTION_NAME}-${ENV}`;
-    const ROLE_NAME = `${FUNCTION_NAME}LambdaExecutionRole-${ENV}`;
+    const ROLE_NAME = `${FUNCTION_NAME}-LambdaExecutionRole`;
     const ZIP_FILE = `lambda_function-${ENV}.zip`;
 
     stageConfig = {

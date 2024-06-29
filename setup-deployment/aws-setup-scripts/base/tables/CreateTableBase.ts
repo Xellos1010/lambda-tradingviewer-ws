@@ -1,7 +1,8 @@
 import { existsSync, readdirSync } from 'fs';
 import { logMessage, logErrorAndThrow } from '../../../aws-deployment-scripts/utils/logger';
+import { BaseCommandExecution } from '../BaseCommandExecution';
 
-export abstract class CreateTableBase {
+export abstract class CreateTableBase extends BaseCommandExecution {
     protected CALLINGDIRECTORY_CREATE_TABLES = process.cwd();
     protected SCRIPT_DIR_CREATE_TABLE = __dirname;
     protected AWS_PROFILE: string;
@@ -9,6 +10,7 @@ export abstract class CreateTableBase {
     protected TABLES_FOLDER: string;
 
     constructor(AWS_PROFILE: string, LOG_FILE: string, TABLES_FOLDER: string) {
+        super();
         this.AWS_PROFILE = AWS_PROFILE;
         this.LOG_FILE = LOG_FILE;
         this.TABLES_FOLDER = TABLES_FOLDER;

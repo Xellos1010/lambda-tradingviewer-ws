@@ -2,7 +2,8 @@
 import { setupLogFile, logMessage } from './utils/logger';
 import { getStageConfig } from './utils/StageConfig';
 import { compressProjectFiles } from './utils/zip-file';
-import { CreateTablesDEV } from '../aws-setup-scripts/DEV/create_tables-dev';
+import { CreateTablesDEV } from '../aws-setup-scripts/DEV/CreateTablesDEV';
+import { CreateRolesDEV } from '../aws-setup-scripts/DEV/CreateRolesDEV';
 
 export const deployBasePackage = () => {
     // Initialize configuration
@@ -10,13 +11,15 @@ export const deployBasePackage = () => {
     const {
         // FUNCTION_NAME,
         // ZIP_FILE,
-        // ROLE_NAME,
+        ROLE_NAME,
         // RUNTIME,
-        // ACCOUNT_ID,
+        ACCOUNT_ID,
         // REGION,
         LOG_FILE,
         // ROLE_ARN,
-        // HTTP_METHOD
+        // HTTP_METHOD,
+        ENV,
+        STAGE
     } = stageConfig;
 
     const AWS_PROFILE = process.env.AWS_PROFILE;
@@ -36,10 +39,13 @@ export const deployBasePackage = () => {
     createTablesDEV.setupAndCreateTables();
     logMessage(LOG_FILE, 'Table Creation is Complete.');
 
-    // // Call the script to create the roles and assign the policies
-    // logMessage(LOG_FILE, 'Calling script to create roles and assign policies.');
-    // executeCommand(`ts-node aws-setup-scripts/${stageConfig.ENV}/create-role-${stageConfig.STAGE}.ts`, LOG_FILE);
-    // logMessage(LOG_FILE, 'Role creation and policy assignment script execution completed.');
+    
+
+    // Call the script to create the roles and assign the policies
+    logMessage(LOG_FILE, 'Calling script to create roles and assign policies.');
+    const createRolesDEV = new CreateRolesDEV(AWS_PROFILE, LOG_FILE, ROLE_NAME, STAGE, ENV, ACCOUNT_ID);
+    createRolesDEV.createRolesAndPolicies();
+    logMessage(LOG_FILE, 'Role creation and policy assignment script execution completed.');
 
     // // Deploy Lambda function code
     // logMessage(LOG_FILE, 'Deploying Lambda function with AWS CLI...');
